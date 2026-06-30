@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy Legend | Toko Server</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mcPurple: '#6A2CDB',
+                        mcPurpleDark: '#221544',
+                        mcPurpleLight: '#9D65FF',
+                        mcRed: '#E63B2E',
+                        mcGold: '#FFD700',
+                        mcGreen: '#3C8527',
+                        mcDark: '#121212',
+                        mcGray: '#828282',
+                        mcLight: '#F0F0F0',
+                        mcAdmin: '#DC2626',
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=90') center/cover no-repeat;
+            color: #ffffff;
+        }
+
+        /* Ikon Keranjang */
+        .keranjang-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            width: 48px;
+            height: 48px;
+            background: rgba(0,0,0,0.85);
+            border: 2px solid #9D65FF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 999;
+            transition: 0.2s;
+            font-size: 22px;
+        }
+
+        .keranjang-btn:hover {
+            background: rgba(30,15,60,0.95);
+            box-shadow: 0 0 10px #9D65FF80;
+            transform: scale(1.05);
+        }
+
+        .jumlah-keranjang {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #FFD700;
+            color: #000;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            border: 1px solid #000;
+        }
+
+        /* Gaya Kotak Login */
+        .kotak-auth {
+            background: rgba(20, 15, 40, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            max-width: 340px;
+            width: 100%;
+            padding: 2rem;
+        }
+
+        .garis-pembatas {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #9D65FF, transparent);
+            margin: 0.5rem 0 1.5rem;
+        }
+
+        .input-style {
+            width: 100%;
+            padding: 0.5rem 0;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #9D65FF;
+            color: #ffffff;
+            outline: none;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .input-style::placeholder {
+            color: #b0a2e8;
+            opacity: 0.7;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 0.65rem;
+            background: linear-gradient(90deg, #6A2CDB, #9D65FF);
+            border: none;
+            border-radius: 20px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(90deg, #5824B8, #8A50E8);
+            box-shadow: 0 0 12px rgba(106, 44, 219, 0.5);
+        }
+
+        .btn-admin {
+            background: linear-gradient(90deg, #991B1B, #DC2626);
+        }
+
+        .btn-admin:hover {
+            background: linear-gradient(90deg, #7F1D1D, #B91C1C);
+            box-shadow: 0 0 12px rgba(220, 38, 38, 0.5);
+        }
+
+        .teks-bawah {
+            margin-top: 1.2rem;
+            font-size: 0.9rem;
+            color: #d0c8f0;
+            text-align: center;
+        }
+
+        .link-aktif {
+            color: #9D65FF;
+            font-weight: 500;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-block;
+        }
+
+        .link-aktif:hover {
+            color: #b990ff;
+        }
+
+        /* Gaya Halaman Lainnya */
+        .menu-card {
+            padding: 1.5rem;
+            border: 3px solid #000;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            color: #ffffff;
+            border-radius: 6px;
+            background: rgba(0,0,0,0.75);
+        }
+
+        .menu-card:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.15);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.6);
+        }
+
+        .item-card {
+            background: rgba(17, 17, 17, 0.9);
+            border: 2px solid #444;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            transition: all 0.2s ease;
+            color: #ffffff;
+            border-radius: 4px;
+        }
+
+        .tombol-aksi {
+            display: flex;
+            margin-top: 1.2rem;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .daftar-skill {
+            display: block;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(26, 26, 26, 0.9);
+            border: 2px solid #555;
+            border-radius: 4px;
+            color: #ffffff;
+        }
+
+        .skill-pilihan {
+            padding: 0.7rem;
+            margin: 0.4rem 0;
+            border: 2px solid transparent;
+            background: rgba(34, 34, 34, 0.9);
+            color: #ffffff;
+            transition: 0.15s;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .skill-pilihan:hover, .skill-pilihan.dipilih {
+            border-color: #FFD700;
+            background: rgba(42, 42, 42, 0.9);
+        }
+
+        .btn-beli {
+            background: #3C8527;
+            color: #ffffff;
+            padding: 0.5rem 1.2rem;
+            border: 2px solid #000;
+            box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2);
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.15s;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .btn-beli:hover {
+            background: #4EA839;
+            transform: translateY(-1px);
+        }
+
+        .btn-batal {
+            background: #8B5A2B;
+            color: #ffffff;
+            padding: 0.5rem 1.2rem;
+            border: 2px solid #000;
+            box-shadow: inset 2px 2px 0 rgba(255,255,255,0.2);
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.15s;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        .btn-batal:hover {
+            background: #A66D38;
+            transform: translateY(-1px);
+        }
+
+        .kotak-konten {
+            background: rgba(17, 17, 17, 0.9);
+            border: 2px solid #444;
+            color: #ffffff;
+            border-radius: 6px;
+            padding: 1.5rem;
+        }
+
+        .info-keuntungan {
+            margin-top: 2rem;
+            padding: 1rem;
+            text-align: center;
+            line-height: 1.8;
+            color: #e0e0e0;
+        }
+
+        .info-keuntungan h4 {
+            color: #FFD700;
+            font-weight: bold;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .info-keuntungan .penutup {
+            margin-top: 1rem;
+            font-weight: bold;
+            color: #9D65FF;
+            font-size: 1.05rem;
+        }
+
+        /* Gaya Tabel Admin */
+        .tabel-admin {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .tabel-admin th, .tabel-admin td {
+            border: 1px solid #555;
+            padding: 0.8rem;
+            text-align: left;
+        }
+
+        .tabel-admin th {
+            background: #222;
+            color: #FFD700;
+        }
+
+        .tabel-admin tr:nth-child(even) {
+            background: rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body>
+    <!-- Ikon Keranjang -->
+    <div id="tombolKeranjang" class="keranjang-btn hidden" onclick="bukaKeranjang()">
+        <i class="fa fa-shopping-cart"></i>
+        <div id="jumlahKeranjang" class="jumlah-keranjang">0</div>
+    </div>
+
+    <!-- HALAMAN LOGIN -->
+    <div id="halaman-auth" class="min-h-screen flex items-center justify-center">
+        <div class="kotak-auth">
+            <div id="form-login" class="block">
+                <h2 class="text-center text-white text-xl font-bold tracking-wider">LOGIN PENGGUNA</h2>
+                <div class="garis-pembatas"></div>
+                
+                <div>
+                    <label class="text-sm text-[#b0a2e8] mb-1 block">Username</label>
+                    <input type="text" id="username" class="input-style" placeholder="username minecraft" required>
+                </div>
+                <div>
+                    <label class="text-sm text-[#b0a2e8] mb-1 block">Password</label>
+                    <input type="password" id="password" class="input-style" placeholder="Masukkan kata sandi" required>
+                </div>
+                <button type="button" onclick="prosesLogin()" class="btn-login mt-2">Masuk</button>
+                
+                <p class="teks-bawah">
+                    Belum punya akun? <span onclick="gantiKeDaftar()" class="link-aktif">Daftar di sini</span>
+                </p>
+                <p class="teks-bawah mt-2">
+                    <span onclick="gantiKeLoginAdmin()" class="link-aktif text-red-400">🔑 Masuk sebagai Admin</span>
+                </p>
+            </div>
+
+            <div id="form-daftar" class="hidden">
+                <h2 class="text-center text-white text-xl font-bold tracking-wider">DAFTAR AKUN BARU</h2>
+                <div class="garis-pembatas"></div>
+                
+                <div>
+                    <label class="text-sm text-[#b0a2e8] mb-1 block">Username</label>
+                    <input type="text" id="reg-username" class="input-style" placeholder="username minecraft anda" required>
+                </div>
+                <div>
+                    <label class="text-sm text-[#b0a2e8] mb-1 block">Password</label>
+                    <input type="password" id="reg-password" class="input-style" placeholder="Minimal 6 karakter" required>
+                </div>
+                <div>
+                    <label class="text-sm text-[#b0a2e8] mb-1 block">Konfirmasi Password</label>
+                    <input type="password" id="reg-konfirm" class="input-style" placeholder="Ulangi kata sandi" required>
+                </div>
+                <button type="button" onclick="prosesDaftar()" class="btn-login mt-2">Daftar Akun</button>
+                
+                <p class="teks-bawah">
+                    Sudah punya akun? <span onclick="gantiKeLogin()" class="link-aktif">Kembali ke Login</span>
+                </p>
+            </div>
+
+            <div id="form-login-admin" class="hidden">
+                <h2 class="text-center text-mcAdmin text-xl font-bold tracking-wider">LOGIN ADMIN</h2>
+                <div class="garis-pembatas"></div>
+                
+                <div>
+                    <label class="text-sm text-[#b0a2e8] mb-1 block">Username Admin</label>
+                    <input type="text" id="admin-user" class="input-style" placeholder="Masukkan akun admin" required>
+                </div>
+                <div>
+                    <label class="text-sm text-[#b0a2e8] mb-1 block">Kata Sandi Admin</label>
+                    <input type="password" id="admin-pass" class="input-style" placeholder="Kata sandi khusus" required>
+                </div>
+                <button type="button" onclick="prosesLoginAdmin()" class="btn-login btn-admin mt-2">Masuk Panel Admin</button>
+                
+                <p class="teks-bawah">
+                    <span onclick="gantiKeLogin()" class="link-aktif">← Kembali ke Login Pengguna</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- HALAMAN UTAMA PENGGUNA -->
+    <div id="halaman-menu" class="hidden container mx-auto max-w-3xl p-4 pt-20">
+        <header class="text-center mb-8 bg-black/60 p-6 rounded-lg border border-purple-500/30">
+            <h1 class="text-3xl md:text-4xl text-mcPurpleLight font-bold mb-3">LEGACY LEGEND</h1>
+            <p class="text-white text-lg mb-1">👋 Halo, <span id="namaUser" class="text-mcPurpleLight font-bold">Pengguna</span>!</p>
+            <p class="text-gray-200">Pilih layanan yang ingin kamu dapatkan</p>
+        </header>
+
+        <div class="grid gap-5 md:grid-cols-3">
+            <div onclick="bukaMenu('aurelium')" class="menu-card bg-purple-900/70 border-purple-500">
+                <div class="text-4xl mb-3">🧪✨</div>
+                <h3 class="text-xl font-bold mb-2">AURELIUM SKILL</h3>
+                <p class="text-sm opacity-95">Tingkatkan kemampuan karaktermu</p>
+            </div>
+
+            <div onclick="bukaMenu('item')" class="menu-card bg-red-900/70 border-red-500">
+                <div class="text-4xl mb-3">🩹🍖</div>
+                <h3 class="text-xl font-bold mb-2">ITEM & PERLENGKAPAN</h3>
+                <p class="text-sm opacity-95">Item pendukung & senjata pilihan</p>
+            </div>
+
+            <div onclick="bukaMenu('rank')" class="menu-card bg-yellow-800/70 border-yellow-500">
+                <div class="text-4xl mb-3">⚔️👑</div>
+                <h3 class="text-xl font-bold mb-2">DAFTAR RANK & KIT OP</h3>
+                <p class="text-sm opacity-95">Dapatkan hak istimewa & Kit OP</p>
+            </div>
+        </div>
+
+        <button onclick="keluarAkun()" class="mt-8 bg-black/70 text-white px-4 py-2 border border-purple-500/50 hover:bg-purple-900/60 rounded">← Keluar</button>
+    </div>
+
+    <!-- HALAMAN DETAIL -->
+    <div id="halaman-detail" class="hidden container mx-auto max-w-2xl p-4 pt-20">
+        <div id="konten" class="kotak-konten mb-6"></div>
+
+        <div class="info-keuntungan">
+            <h4>📢 Keuntungan Membeli</h4>
+            <p>✔️ Mendukung perkembangan server</p>
+            <p>✔️ Proses cepat & aman</p>
+            <p>✔️ Tetap menjaga keseimbangan gameplay</p>
+            <p>✔️ Tidak ada pilih kasih antar pemain</p>
+            <p class="penutup">🔥 LEGACY LEGENDS — RISE TO GLORY! 🔥</p>
+        </div>
+
+        <button onclick="kembaliKeMenu()" class="mt-6 bg-black/70 text-white px-4 py-2 border border-purple-500/50 hover:bg-purple-900/60 rounded">← Kembali ke Menu</button>
+    </div>
+
+    <!-- HALAMAN KERANJANG -->
+    <div id="halaman-keranjang" class="hidden container mx-auto max-w-xl p-4 pt-20">
+        <div class="kotak-konten p-6">
+            <h2 class="text-center text-mcPurpleLight text-xl font-bold mb-6">🛒 KERANJANG PESANAN</h2>
+            <div id="isiKeranjang" class="space-y-3 mb-5"></div>
+            <div class="text-right text-xl text-white font-bold mb-5">Total: <span id="totalHarga" class="text-mcPurpleLight">Rp 0</span></div>
+            <div class="flex gap-4 justify-center">
+                <button onclick="prosesBayar()" class="btn-beli text-lg">💳 Checkout ke WhatsApp</button>
+                <button onclick="batalPesanan()" class="btn-batal text-lg">❌ Kosongkan Keranjang</button>
+            </div>
+        </div>
+
+        <div class="info-keuntungan">
+            <h4>📢 Keuntungan Membeli</h4>
+            <p>✔️ Mendukung perkembangan server</p>
+            <p>✔️ Proses cepat & aman</p>
+            <p>✔️ Tetap menjaga keseimbangan gameplay</p>
+            <p>✔️ Tidak ada pilih kasih antar pemain</p>
+            <p class="penutup">🔥 LEGACY LEGENDS — RISE TO GLORY! 🔥</p>
+        </div>
+
+        <button onclick="kembaliKeDetail()" class="mt-6 bg-black/70 text-white px-4 py-2 border border-purple-500/50 hover:bg-purple-900/60 rounded">← Kembali</button>
+    </div>
+
+    <!-- HALAMAN PANEL ADMIN -->
+    <div id="halaman-admin" class="hidden container mx-auto max-w-4xl p-4 pt-20">
+        <header class="text-center mb-8 bg-black/70 p-6 rounded-lg border border-red-700/50">
+            <h1 class="text-3xl text-mcAdmin font-bold mb-2">🔐 PANEL ADMIN</h1>
+            <p class="text-gray-300">Daftar Semua Pengguna & Riwayat Pembelian</p>
+        </header>
+
+        <div class="kotak-konten">
+            <h3 class="text-xl text-mcGold font-bold mb-4">📋 Daftar Akun Terdaftar</h3>
+            <table class="tabel-admin">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Username</th>
+                        <th>Kata Sandi</th>
+                        <th>Jumlah Pembelian</th>
+                    </tr>
+                </thead>
+                <tbody id="isiTabelAdmin">
+                    <tr><td colspan="4" class="text-center text-gray-400">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button onclick="keluarAkun()" class="mt-8 bg-red-800/80 text-white px-5 py-2 rounded hover:bg-red-700">← Keluar dari Panel Admin</button>
+    </div>
+
+    <script>
+        let keranjang = [];
+        let halamanSebelum = "";
+        let skillDipilih = null;
+        const akunAdmin = { user: "admin", pass: "admin123" }; // Bisa diganti sesuai keinginan
+
+        // --- Fungsi Umum ---
+        function updateJumlahKeranjang() {
+            document.getElementById('jumlahKeranjang').textContent = keranjang.length;
+        }
+
+        function gantiKeDaftar() {
+            document.getElementById('form-login').classList.add('hidden');
+            document.getElementById('form-daftar').classList.remove('hidden');
+        }
+
+        function gantiKeLogin() {
+            document.getElementById('form-daftar').classList.add('hidden');
+            document.getElementById('form-login-admin').classList.add('hidden');
+            document.getElementById('form-login').classList.remove('hidden');
+        }
+
+        function gantiKeLoginAdmin() {
+            document.getElementById('form-login').classList.add('hidden');
+            document.getElementById('form-login-admin').classList.remove('hidden');
+        }
+
+        // --- Proses Daftar & Login Pengguna ---
+        function prosesDaftar() {
+            const user = document.getElementById('reg-username').value.trim();
+            const pass = document.getElementById('reg-password').value;
+            const konfirm = document.getElementById('reg-konfirm').value;
+
+            if (!user || !pass || !konfirm) { alert("⚠️ Semua kolom harus diisi!"); return; }
+            if (pass !== konfirm) { alert("❌ Kata sandi tidak cocok!"); return; }
+            if (pass.length < 6) { alert("⚠️ Sandi minimal 6 karakter!"); return; }
+            if (user === akunAdmin.user) { alert("❌ Username ini dipesan untuk admin!"); return; }
+            if (localStorage.getItem("akun_" + user)) { alert("❌ Username sudah terdaftar!"); return; }
+
+            localStorage.setItem("akun_" + user, pass);
+            localStorage.setItem("beli_" + user, "0"); // Catat jumlah beli = 0
+            alert("✅ Pendaftaran berhasil!");
+            gantiKeLogin();
+        }
+
+        function prosesLogin() {
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value;
+            const simpan = localStorage.getItem("akun_" + user);
+
+            if (!simpan || simpan !== pass) { alert("❌ Username atau sandi salah!"); return; }
+
+            document.getElementById('namaUser').textContent = user;
+            document.getElementById('halaman-auth').classList.add('hidden');
+            document.getElementById('halaman-menu').classList.remove('hidden');
+            document.getElementById('tombolKeranjang').classList.remove('hidden');
+        }
+
+        // --- Proses Login Admin ---
+        function prosesLoginAdmin() {
+            const user = document.getElementById('admin-user').value.trim();
+            const pass = document.getElementById('admin-pass').value;
+
+            if (user === akunAdmin.user && pass === akunAdmin.pass) {
+                document.getElementById('halaman-auth').classList.add('hidden');
+                document.getElementById('halaman-admin').classList.remove('hidden');
+                tampilkanDataAdmin();
+            } else {
+                alert("❌ Akun admin tidak valid!");
+            }
+        }
+
+        // --- Tampilkan Data di Panel Admin ---
+        function tampilkanDataAdmin() {
+            let html = "";
+            let nomor = 1;
+            for (let i = 0; i < localStorage.length; i++) {
+                const kunci = localStorage.key(i);
+                if (kunci.startsWith("akun_")) {
+                    const nama = kunci.replace("akun_", "");
+                    const sandi = localStorage.getItem(kunci);
+                    const jumlah = localStorage.getItem("beli_" + nama) || "0";
+                    html += `<tr>
+                        <td>${nomor++}</td>
+                        <td>${nama}</td>
+                        <td>${sandi}</td>
+                        <td class="text-yellow-300 font-bold">${jumlah} kali</td>
+                    </tr>`;
+                }
+            }
+            document.getElementById('isiTabelAdmin').innerHTML = html || `<tr><td colspan="4" class="text-center">Belum ada akun terdaftar</td></tr>`;
+        }
+
+        // --- Fungsi Pembelian & Keranjang ---
+        function bukaMenu(jenis) {
+            halamanSebelum = jenis;
+            let konten = "";
+
+            if (jenis === "aurelium") {
+                konten = `
+                    <h3 class="text-center text-mcPurpleLight text-xl font-bold mb-5">AURELIUM SKILL</h3>
+                    <div class="item-card">
+                        <h4 class="text-white text-xl font-bold mb-2">🌟 ONE SKILL MAX</h4>
+                        <p class="text-mcPurpleLight font-bold text-lg mb-3">Rp 8.000 / per skill</p>
+                        <div class="daftar-skill">
+                            <p class="text-white mb-3 font-semibold">Pilih salah satu skill:</p>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Farming')">🌾 Farming</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Foraging')">🌲 Foraging</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Mining')">⛏️ Mining</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Fishing')">🎣 Fishing</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Excavation')">⛏️ Excavation</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Archery')">🏹 Archery</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Defense')">🛡️ Defense</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Fighting')">⚔️ Fighting</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Agility')">💨 Agility</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Enchanting')">✨ Enchanting</div>
+                                <div class="skill-pilihan" onclick="pilihSkill(this, 'Alchemy')">⚗️ Alchemy</div>
+                            </div>
+                        </div>
+                        <div class="tombol-aksi">
+                            <button class="btn-beli" onclick="beliSkill()">✅ Tambah ke Keranjang</button>
+                            <button class="btn-batal" onclick="resetPilihanSkill()">❌ Batalkan</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <h4 class="text-white text-xl font-bold mb-2">🌟 SKILL ALL MAX</h4>
+                        <p class="text-mcPurpleLight font-bold text-lg">Rp 70.000</p>
+                        <div class="tombol-aksi">
+                            <button class="btn-beli" onclick="tambahKeKeranjang('Skill All Max', 'Rp 70.000')">✅ Tambah ke Keranjang</button>
+                            <button class="btn-batal" onclick="resetPilihanSkill()">❌ Batalkan</button>
+                        </div>
+                    </div>`;
+            }
+
+            if (jenis === "item") {
+                konten = `
+                    <h3 class="text-center text-red-400 text-xl font-bold mb-5">ITEM & PERLENGKAPAN</h3>
+                    <div class="item-card">
+                        <p>🔷 Item Health Shulker: <span class="text-mcPurpleLight font-bold">Rp 20.000</span></p>
+                        <div class="tombol-aksi">
+                            <button class="btn-beli" onclick="tambahKeKeranjang('Item Health Shulker', 'Rp 20.000')">✅ Tambah</button>
+                            <button class="btn-batal" onclick="resetPilihanSkill()">❌ Batalkan</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <p>🔷 Totem Shulker: <span class="text-mcPurpleLight font-bold">Rp 10.000</span></p>
+                        <div class="tombol-aksi">
+                            <button class="btn-beli" onclick="tambahKeKeranjang('Totem Shulker', 'Rp 10.000')">✅ Tambah</button>
+                            <button class="btn-batal" onclick="resetPilihanSkill()">❌ Batalkan</button>
+                        </div>
+                    </div>
+                    <div class="item-card">
+                        <p>🔷 Senjata Legends: <span class="text-mcPurpleLight font-bold">Rp 100.000</span></p>
+                        <div class="tombol-aksi">
+                            <button class="btn-beli" onclick="tambahKeKeranjang('Senjata Legends', 'Rp 100.000')">✅ Tambah</button>
+                            <button class="btn-batal" onclick="resetPilihanSkill()">❌ Batalkan</button>
+                        </div>
+                    </div>`;
+            }
+
+            if (jenis === "rank") {
+                konten = `
+                    <h3 class="text-center text-yellow-300 text-xl font-bold mb-5">DAFTAR RANK & KIT OP</h3>
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="item-card bg-gray-300/90 text-black">
+                            <h4 class="font-bold">MEDIA</h4>
+                            <p class="text-sm">Kit Pemula + Chat Warna</p>
+                            <p class="font-bold mt-2">GRATIS</p>
+                            <div class="tombol-aksi">
+                                <button class="btn-beli" onclick="tambahKeKeranjang('Rank Media', 'GRATIS')">✅ Tambah</button>
+                            </div>
+                        </div>
+                        <div class="item-card bg-gray-600/90 text-white">
+                            <h4 class="font-bold">WARRIOR</h4>
+                            <p class="text-sm">Kit Pertarungan</p>
+                            <p class="font-bold mt-2">Rp 5.000</p>
+                            <div class="tombol-aksi">
+                                <button class="btn-beli" onclick="tambahKeKeranjang('Rank Warrior', 'Rp 5.000')">✅ Tambah</button>
+                            </div>
+                        </div>
+                        <div class="item-card bg-yellow-500/90 text-black">
+                            <h4 class="font-bold">LEGEND</h4>
+                            <p class="text-sm">Kit Legendaris</p>
+                            <p class="font-bold mt-2">Rp 10.000</p>
+                            <div class="tombol-aksi">
+                                <button class="btn-beli" onclick="tambahKeKeranjang('Rank Legend', 'Rp 10.000')">✅ Tambah</button>
+                            </div>
+                        </div>
+                        <div class="item-card bg-cyan-400/90 text-black">
+                            <h4 class="font-bold">MYTHIC</h4>
+                            <p class="text-sm">Kit Mistis</p>
+                            <p class="font-bold mt-2">Rp 15.000</p>
+                            <div class="tombol-aksi">
+                                <button class="btn-beli" onclick="tambahKeKeranjang('Rank Mythic', 'Rp 15.000')">✅ Tambah</button>
+                            </div>
+                        </div>
+                        <div class="item-card bg-purple-600/90 text-white">
+                            <h4 class="font-bold">LEGACY</h4>
+                            <p class="text-sm">Kit Terkuat</p>
+                            <p class="font-bold mt-2">Rp 20.000</p>
+                            <div class="tombol-aksi">
+                                <button class="btn-beli" onclick="tambahKeKeranjang('Rank Legacy', 'Rp 20.000')">✅ Tambah</button>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+
+            document.getElementById('konten').innerHTML = konten;
+            document.getElementById('halaman-menu').classList.add('hidden');
+            document.getElementById('halaman-detail').classList.remove('hidden');
+        }
+
+        function pilihSkill(el, nama) {
+            document.querySelectorAll('.skill-pilihan').forEach(s => s.classList.remove('dipilih'));
+            el.classList.add('dipilih');
+            skillDipilih = nama;
+        }
+
+        function beliSkill() {
+            if (!skillDipilih) { alert("⚠️ Pilih skill dulu!"); return; }
+            tambahKeKeranjang(`Max Skill: ${skillDipilih}`, "Rp 8.000");
+        }
+
+        function tambahKeKeranjang(nama, harga) {
+            keranjang.push({ nama, harga });
+            updateJumlahKeranjang();
+            alert("✅ Ditambahkan ke keranjang!");
+        }
+
+        function resetPilihanSkill() {
+            document.querySelectorAll('.skill-pilihan').forEach(s => s.classList.remove('dipilih'));
+            skillDipilih = null;
+        }
+
+        function bukaKeranjang() {
+            let isi = "", total = 0;
+            keranjang.forEach((item, i) => {
+                isi += `<div class="flex justify-between p-3 bg-black/60 rounded my-2">
+                    <span>${i+1}. ${item.nama}</span>
+                    <span class="text-mcPurpleLight font-bold">${item.harga}</span>
+                </div>`;
+                total += parseInt(item.harga.replace(/\D/g, '')) || 0;
+            });
+            document.getElementById('isiKeranjang').innerHTML = isi || "<p class='text-center'>Keranjang kosong</p>";
+            document.getElementById('totalHarga').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+            document.getElementById('halaman-detail').classList.add('hidden');
+            document.getElementById('halaman-menu').classList.add('hidden');
+            document.getElementById('halaman-keranjang').classList.remove('hidden');
+        }
+
+        function prosesBayar() {
+            if (keranjang.length === 0) { alert("⚠️ Keranjang kosong!"); return; }
+            const user = document.getElementById('namaUser').textContent;
+            const jumlahSebelum = parseInt(localStorage.getItem("beli_" + user)) || 0;
+            localStorage.setItem("beli_" + user, jumlahSebelum + 1); // Tambah jumlah beli
+
+            let daftar = "";
+            keranjang.forEach((i, idx) => daftar += `${idx+1}. ${i.nama} - ${i.harga}\n`);
+            const total = document.getElementById('totalHarga').textContent;
+
+            const pesan = `👋 Halo Admin!%0A%0A` +
+`👤 Akun: ${user}
+🛒 Pesanan:
+${daftar}
+💰 Total: ${total}
+
+✅ Terima kasih sudah beli!`;
+
+            const wa = "6285143907820";
+            window.open(`https://wa.me/${wa}?text=${encodeURIComponent(pesan)}`, '_blank');
+            keranjang = [];
+            updateJumlahKeranjang();
+            kembaliKeMenu();
+        }
+
+        function batalPesanan() {
+            if (confirm("❌ Kosongkan keranjang?")) { keranjang = []; updateJumlahKeranjang(); kembaliKeDetail(); }
+        }
+
+        function kembaliKeMenu() {
+            document.getElementById('halaman-detail').classList.add('hidden');
+            document.getElementById('halaman-keranjang').classList.add('hidden');
+            document.getElementById('halaman-menu').classList.remove('hidden');
+            skillDipilih = null;
+        }
+
+        function kembaliKeDetail() {
+            document.getElementById('halaman-keranjang').classList.add('hidden');
+            document.getElementById('halaman-detail').classList.remove('hidden');
+        }
+
+        function keluarAkun() {
+            document.getElementById('halaman-menu').classList.add('hidden');
+            document.getElementById('halaman-admin').classList.add('hidden');
+            document.getElementById('halaman-detail').classList.add('hidden');
+            document.getElementById('halaman-keranjang').classList.add('hidden');
+            document.getElementById('halaman-auth').classList.remove('hidden');
+            document.getElementById('tombolKeranjang').classList.add('hidden');
+            document.getElementById('username').value = "";
+            document.getElementById('password').value = "";
+            keranjang = [];
+            updateJumlahKeranjang();
+        }
+    </script>
+</body>
+</html>
